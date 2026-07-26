@@ -1,0 +1,75 @@
+<Page x:Class="FluentLauncher.Views.AccountsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      Title="AccountsPage" TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <Grid Margin="24">
+        <StackPanel MaxWidth="700" HorizontalAlignment="Left" Width="700">
+            <TextBlock Text="Accounts" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,24" />
+
+            <TextBlock Text="Your Accounts" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <ListBox ItemsSource="{Binding ViewModel.Accounts}" SelectedItem="{Binding ViewModel.SelectedAccount, Mode=TwoWay}" Margin="0,0,0,24" Background="Transparent" BorderThickness="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <ui:CardControl Margin="0,0,0,8" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                            <ui:CardControl.Header>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding AvatarUrl}" Width="32" Height="32" Margin="0,0,12,0" Grid.Column="0"/>
+                                    <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                                        <TextBlock Text="{Binding Username}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Type}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                    <ui:Button Grid.Column="2" Icon="{ui:SymbolIcon Delete24}" Appearance="Danger" Command="{Binding DataContext.ViewModel.RemoveAccountCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                </Grid>
+                            </ui:CardControl.Header>
+                        </ui:CardControl>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <TextBlock Text="Add Account" FontWeight="SemiBold" Margin="0,0,0,8" />
+            
+            <!-- Microsoft -->
+            <ui:CardAction Command="{Binding ViewModel.LoginMicrosoftCommand}" Margin="0,0,0,8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Symbol="Key24" Margin="0,0,12,0" Grid.Column="0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Microsoft Account" FontWeight="SemiBold" />
+                        <TextBlock Text="Play official servers and realms" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardAction>
+
+            <!-- Offline -->
+            <ui:Card Margin="0,0,0,8">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                        <TextBlock Text="Offline Account" FontWeight="SemiBold" />
+                        <TextBlock Text="Play locally without authentication" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ui:TextBox Text="{Binding ViewModel.OfflineUsername, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Enter username" Margin="0,0,8,0" />
+                        <ui:Button Grid.Column="1" Content="Login" Command="{Binding ViewModel.LoginOfflineCommand}" Appearance="Primary" />
+                    </Grid>
+                </Grid>
+            </ui:Card>
+        </StackPanel>
+    </Grid>
+</Page>

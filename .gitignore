@@ -1,0 +1,30 @@
+# Visual Studio / .NET
+bin/
+obj/
+publish/
+installer/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Random files
+console.log(t))
+test.js
+test.png
+scaffold.ps1
+setup.iss

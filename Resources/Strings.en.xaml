@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- MainWindow -->
+    <system:String x:Key="Str_Instances">Instances</system:String>
+    <system:String x:Key="Str_Skin">Skin</system:String>
+    <system:String x:Key="Str_Settings">Settings</system:String>
+    <system:String x:Key="Str_ByAuthor">By. Heidels &amp; Gemini</system:String>
+    
+    <!-- InstancesPage -->
+    <system:String x:Key="Str_YourInstances">Your Instances</system:String>
+    <system:String x:Key="Str_CreateInstance">Create Instance</system:String>
+    <system:String x:Key="Str_NoInstances">You don't have any instances yet.</system:String>
+    
+    <!-- CreateInstancePage -->
+    <system:String x:Key="Str_CreateNewInstance">Create New Instance</system:String>
+    <system:String x:Key="Str_ImportFlpack">Import FLPack (.flpack)</system:String>
+    <system:String x:Key="Str_ImportModrinth">Import Modrinth Pack</system:String>
+    <system:String x:Key="Str_Name">Name</system:String>
+    <system:String x:Key="Str_NamePlaceholder">My Awesome Modpack</system:String>
+    <system:String x:Key="Str_MinecraftVersion">Minecraft Version</system:String>
+    <system:String x:Key="Str_ModLoader">Mod Loader</system:String>
+    <system:String x:Key="Str_IconOptional">Icon (Optional)</system:String>
+    <system:String x:Key="Str_SelectImage">Select Image</system:String>
+    <system:String x:Key="Str_Cancel">Cancel</system:String>
+    <system:String x:Key="Str_Create">Create</system:String>
+
+    <!-- SkinPage -->
+    <system:String x:Key="Str_OfflineSkinWarning">Cannot change skin on offline account.</system:String>
+    <system:String x:Key="Str_SkinManagement">Skin Management</system:String>
+    <system:String x:Key="Str_ModelType">Model Type:</system:String>
+    <system:String x:Key="Str_UploadCustomSkin">Upload Custom Skin</system:String>
+    <system:String x:Key="Str_PredefinedSkins">Predefined Skins</system:String>
+    <system:String x:Key="Str_Apply">Apply</system:String>
+
+    <!-- SettingsPage -->
+    <system:String x:Key="Str_GeneralSettings">General Settings</system:String>
+    <system:String x:Key="Str_Theme">Theme</system:String>
+    <system:String x:Key="Str_ThemeDesc">Choose your preferred theme.</system:String>
+    <system:String x:Key="Str_Light">Light</system:String>
+    <system:String x:Key="Str_Dark">Dark</system:String>
+    <system:String x:Key="Str_Language">Language</system:String>
+    <system:String x:Key="Str_LanguageDesc">Choose your preferred language.</system:String>
+    <system:String x:Key="Str_English">English</system:String>
+    <system:String x:Key="Str_Ukrainian">Ukrainian</system:String>
+    <system:String x:Key="Str_AutoCheckUpdates">Auto-check for updates</system:String>
+    <system:String x:Key="Str_AutoCheckUpdatesDesc">Check for launcher updates on startup.</system:String>
+    <system:String x:Key="Str_CheckForUpdatesBtn">Check for Updates</system:String>
+
+</ResourceDictionary>

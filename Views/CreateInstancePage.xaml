@@ -1,0 +1,75 @@
+<Page x:Class="FluentLauncher.Views.CreateInstancePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:FluentLauncher.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="CreateInstancePage" TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Grid Margin="24">
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            <core:ImagePathConverter x:Key="ImgConv" xmlns:core="clr-namespace:FluentLauncher.Core" />
+        </Grid.Resources>
+
+        <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="600" HorizontalAlignment="Center" Margin="0,0,0,40">
+                    <StackPanel Margin="0,0,0,24">
+                        <TextBlock Text="{DynamicResource Str_CreateNewInstance}" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,12"/>
+                        <StackPanel Orientation="Horizontal">
+                            <ui:Button Content="{DynamicResource Str_ImportFlpack}" Icon="{ui:SymbolIcon ArrowDownload24}" Command="{Binding ViewModel.ImportFLPackCommand}" Margin="0,0,8,0" />
+                            <ui:Button Content="{DynamicResource Str_ImportModrinth}" Icon="{ui:SymbolIcon ArrowDownload24}" Command="{Binding ViewModel.ImportModpackCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Name -->
+                    <TextBlock Text="{DynamicResource Str_Name}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <ui:TextBox Text="{Binding ViewModel.InstanceName, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{DynamicResource Str_NamePlaceholder}" Margin="0,0,0,16" />
+
+                    <!-- Version -->
+                    <TextBlock Text="{DynamicResource Str_MinecraftVersion}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <Grid Margin="0,0,0,16">
+                        <ComboBox ItemsSource="{Binding ViewModel.MinecraftVersions}" SelectedItem="{Binding ViewModel.SelectedVersion}" HorizontalAlignment="Stretch" />
+                        <ui:ProgressRing Visibility="{Binding ViewModel.IsLoadingVersions, Converter={StaticResource BoolToVis}}" IsIndeterminate="True" HorizontalAlignment="Right" Margin="0,0,32,0" Width="16" Height="16" />
+                    </Grid>
+
+                    <!-- Modloader -->
+                    <TextBlock Text="{DynamicResource Str_ModLoader}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <ComboBox ItemsSource="{Binding ViewModel.ModLoaders}" SelectedItem="{Binding ViewModel.SelectedModLoader}" HorizontalAlignment="Stretch" Margin="0,0,0,16" />
+
+                    <!-- Icon -->
+                    <TextBlock Text="{DynamicResource Str_IconOptional}" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,32">
+                        <Border Width="64" Height="64" CornerRadius="8" Background="{DynamicResource ControlFillColorDefaultBrush}" Margin="0,0,16,0" ClipToBounds="True">
+                            <Grid>
+                                <ui:SymbolIcon Symbol="Image24" FontSize="24" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                <Image Source="{Binding ViewModel.IconPath, Converter={StaticResource ImgConv}}" Stretch="UniformToFill" />
+                            </Grid>
+                        </Border>
+                        <ui:Button Content="{DynamicResource Str_SelectImage}" Command="{Binding ViewModel.SelectIconCommand}" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Actions -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,32">
+                        <ui:Button Content="{DynamicResource Str_Cancel}" Command="{Binding ViewModel.CancelCommand}" Margin="0,0,8,0" />
+                        <ui:Button Content="{DynamicResource Str_Create}" Appearance="Primary" Command="{Binding ViewModel.CreateCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Import Overlay -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    Visibility="{Binding ViewModel.IsImporting, Converter={StaticResource BoolToVis}}" 
+                    VerticalAlignment="Bottom" Margin="0,0,0,24" CornerRadius="8" Padding="24" MaxWidth="600" HorizontalAlignment="Stretch">
+                <StackPanel>
+                    <TextBlock Text="{Binding ViewModel.ImportStatus}" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" Margin="0,0,0,12" TextWrapping="Wrap" />
+                    <ProgressBar Value="{Binding ViewModel.ImportProgress}" IsIndeterminate="False" Height="4" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

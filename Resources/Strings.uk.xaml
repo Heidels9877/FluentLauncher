@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- MainWindow -->
+    <system:String x:Key="Str_Instances">Збірки</system:String>
+    <system:String x:Key="Str_Skin">Скін</system:String>
+    <system:String x:Key="Str_Settings">Налаштування</system:String>
+    <system:String x:Key="Str_ByAuthor">Від: Heidels &amp; Gemini</system:String>
+    
+    <!-- InstancesPage -->
+    <system:String x:Key="Str_YourInstances">Ваші збірки</system:String>
+    <system:String x:Key="Str_CreateInstance">Створити збірку</system:String>
+    <system:String x:Key="Str_NoInstances">У вас ще немає жодної збірки.</system:String>
+    
+    <!-- CreateInstancePage -->
+    <system:String x:Key="Str_CreateNewInstance">Створити нову збірку</system:String>
+    <system:String x:Key="Str_ImportFlpack">Імпорт FLPack (.flpack)</system:String>
+    <system:String x:Key="Str_ImportModrinth">Імпорт Modrinth Pack</system:String>
+    <system:String x:Key="Str_Name">Назва</system:String>
+    <system:String x:Key="Str_NamePlaceholder">Моя крута збірка</system:String>
+    <system:String x:Key="Str_MinecraftVersion">Версія Minecraft</system:String>
+    <system:String x:Key="Str_ModLoader">Мод Завантажувач</system:String>
+    <system:String x:Key="Str_IconOptional">Іконка (Необов'язково)</system:String>
+    <system:String x:Key="Str_SelectImage">Вибрати зображення</system:String>
+    <system:String x:Key="Str_Cancel">Скасувати</system:String>
+    <system:String x:Key="Str_Create">Створити</system:String>
+
+    <!-- SkinPage -->
+    <system:String x:Key="Str_OfflineSkinWarning">На оффлайн акаунті неможливо змінити скін</system:String>
+    <system:String x:Key="Str_SkinManagement">Керування скіном</system:String>
+    <system:String x:Key="Str_ModelType">Тип моделі:</system:String>
+    <system:String x:Key="Str_UploadCustomSkin">Завантажити власний скін</system:String>
+    <system:String x:Key="Str_PredefinedSkins">Готові скіни</system:String>
+    <system:String x:Key="Str_Apply">Застосувати</system:String>
+
+    <!-- SettingsPage -->
+    <system:String x:Key="Str_GeneralSettings">Загальні налаштування</system:String>
+    <system:String x:Key="Str_Theme">Тема</system:String>
+    <system:String x:Key="Str_ThemeDesc">Оберіть бажану тему.</system:String>
+    <system:String x:Key="Str_Light">Світла</system:String>
+    <system:String x:Key="Str_Dark">Темна</system:String>
+    <system:String x:Key="Str_Language">Мова</system:String>
+    <system:String x:Key="Str_LanguageDesc">Оберіть бажану мову.</system:String>
+    <system:String x:Key="Str_English">English</system:String>
+    <system:String x:Key="Str_Ukrainian">Українська</system:String>
+    <system:String x:Key="Str_AutoCheckUpdates">Авто-перевірка оновлень</system:String>
+    <system:String x:Key="Str_AutoCheckUpdatesDesc">Перевіряти наявність оновлень при запуску.</system:String>
+    <system:String x:Key="Str_CheckForUpdatesBtn">Перевірити оновлення</system:String>
+
+</ResourceDictionary>

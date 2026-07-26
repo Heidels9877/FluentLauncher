@@ -1,0 +1,95 @@
+<Page x:Class="FluentLauncher.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:local="clr-namespace:FluentLauncher.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="SettingsPage" TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+    <Grid Margin="24">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="Accounts" FontWeight="SemiBold" Margin="0,0,0,8" />
+                <ui:CardAction Command="{Binding ViewModel.GoToAccountsCommand}" Margin="0,0,0,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Symbol="Person24" Margin="0,0,12,0" Grid.Column="0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Manage Accounts" FontWeight="SemiBold" />
+                        <TextBlock Text="Add, remove, or switch accounts" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardAction>
+
+            <TextBlock Text="Launcher" FontWeight="SemiBold" Margin="0,0,0,8" />
+            
+            <ui:CardControl Icon="{ui:SymbolIcon ArrowDownload24}" Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_AutoCheckUpdates}" FontWeight="SemiBold" />
+                        <TextBlock Text="{DynamicResource Str_AutoCheckUpdatesDesc}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.Settings.AutoCheckUpdates, Mode=TwoWay}" />
+            </ui:CardControl>
+            
+            <ui:CardAction Command="{Binding ViewModel.CheckForUpdatesCommand}" Margin="0,0,0,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:SymbolIcon Symbol="Search24" Margin="0,0,12,0" Grid.Column="0"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{DynamicResource Str_CheckForUpdatesBtn}" FontWeight="SemiBold" />
+                        <TextBlock Text="Manually check if a new version is available" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </ui:CardAction>
+
+            <ui:CardControl Icon="{ui:SymbolIcon AppTitle24}" Margin="0,0,0,24">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Open logs if game launches" FontWeight="SemiBold" />
+                        <TextBlock Text="Automatically switches to the logs tab when launching a game" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" />
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding ViewModel.Settings.OpenLogsOnLaunch, Mode=TwoWay}" />
+            </ui:CardControl>
+
+            <TextBlock Text="{DynamicResource Str_GeneralSettings}" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <ui:CardControl Icon="{ui:SymbolIcon Color24}" Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_Theme}" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource Str_ThemeDesc}" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox SelectedIndex="{Binding ViewModel.SelectedThemeIndex, Mode=TwoWay}" Width="150">
+                    <ComboBoxItem Content="{DynamicResource Str_Dark}"/>
+                    <ComboBoxItem Content="{DynamicResource Str_Light}"/>
+                </ComboBox>
+            </ui:CardControl>
+
+            <ui:CardControl Icon="{ui:SymbolIcon Settings24}" Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="{DynamicResource Str_Language}" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="{DynamicResource Str_LanguageDesc}" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <ComboBox SelectedIndex="{Binding ViewModel.SelectedLanguageIndex, Mode=TwoWay}" Width="150">
+                    <ComboBoxItem Content="{DynamicResource Str_English}"/>
+                    <ComboBoxItem Content="{DynamicResource Str_Ukrainian}"/>
+                </ComboBox>
+            </ui:CardControl>
+        </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>
