@@ -3,8 +3,7 @@
 <div align="center">
   <img src="https://i.ibb.co/tPvysrCd/FLLogo.png" alt="Fluent Launcher Logo" width="200"/>
   
-  ### Next-Generation Minecraft Launcher for Windows
-  *Fast, beautiful, and deeply integrated into the modern Windows ecosystem.*
+  ### Minecraft Launcher in Windows 11 Fluent Design style
 </div>
 
 ---
@@ -18,7 +17,7 @@
 - ⚡ **Lightning Fast** - Optimized for speed and low resource consumption.
 - 🌍 **Localization** - Fully supports English and Ukrainian languages. Switch dynamically without restarting!
 - 🔄 **Auto-Updates** - Built-in GitHub-based update system keeps you on the latest version seamlessly.
-- 👤 **Advanced Account Management** - Securely log in with Microsoft/Xbox (Minecraft) or use offline accounts.
+- 👤 **Account Management** - Securely log in with your Microsoft/Xbox account.
 - 👕 **3D Skin Viewer** - Change your skin directly in the launcher and view it in real-time 3D (supports Classic and Slim variants).
 
 ---
