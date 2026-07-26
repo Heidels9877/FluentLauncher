@@ -170,7 +170,17 @@ namespace FluentLauncher.Core
                 launchOption.JavaPath = instanceInfo.JavaPath;
             }
 
-            var process = await launcher.CreateProcessAsync(launchVersion, launchOption);
+            System.Diagnostics.Process process;
+            if (isOffline)
+            {
+                // Strictly build process only - no downloads allowed
+                process = await launcher.BuildProcessAsync(launchVersion, launchOption);
+            }
+            else
+            {
+                // Allow downloading missing files for online accounts
+                process = await launcher.CreateProcessAsync(launchVersion, launchOption);
+            }
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.UseShellExecute = false;
