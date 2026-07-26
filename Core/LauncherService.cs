@@ -97,35 +97,26 @@ namespace FluentLauncher.Core
         {
             string launchVersion = instanceInfo.MinecraftVersion;
 
+            if (isOffline && instanceInfo.ModLoader != FluentLauncher.Models.ModLoaderType.Vanilla)
+            {
+                // Only allow modloader download if the vanilla game is already present
+                string vanillaDir = System.IO.Path.Combine(path.Versions, instanceInfo.MinecraftVersion);
+                string vanillaJson = System.IO.Path.Combine(vanillaDir, instanceInfo.MinecraftVersion + ".json");
+                string vanillaJar = System.IO.Path.Combine(vanillaDir, instanceInfo.MinecraftVersion + ".jar");
+                
+                if (!System.IO.File.Exists(vanillaJson) || !System.IO.File.Exists(vanillaJar))
+                {
+                    throw new Exception($"Cannot install {instanceInfo.ModLoader} in offline mode: The base game files ({instanceInfo.MinecraftVersion}) are missing. You must already have the base game installed in your Existing Minecraft Path.");
+                }
+            }
+
             if (instanceInfo.ModLoader == FluentLauncher.Models.ModLoaderType.Forge)
             {
-                if (isOffline)
-                {
-                    var versionsDir = new DirectoryInfo(path.Versions);
-                    if (versionsDir.Exists)
-                    {
-                        var forgeDir = versionsDir.GetDirectories($"{instanceInfo.MinecraftVersion}-forge-*").FirstOrDefault();
-                        if (forgeDir != null) return forgeDir.Name;
-                    }
-                    throw new Exception("Cannot install Forge in offline mode. Forge is not installed in the Existing Minecraft Path for this version.");
-                }
-
                 var forge = new CmlLib.Core.Installer.Forge.ForgeInstaller(launcher);
                 launchVersion = await forge.Install(instanceInfo.MinecraftVersion);
             }
             else if (instanceInfo.ModLoader == FluentLauncher.Models.ModLoaderType.Fabric)
             {
-                if (isOffline)
-                {
-                    var versionsDir = new DirectoryInfo(path.Versions);
-                    if (versionsDir.Exists)
-                    {
-                        var fabricDir = versionsDir.GetDirectories($"fabric-loader-*-{instanceInfo.MinecraftVersion}").FirstOrDefault();
-                        if (fabricDir != null) return fabricDir.Name;
-                    }
-                    throw new Exception("Cannot install Fabric in offline mode. Fabric is not installed in the Existing Minecraft Path for this version.");
-                }
-
                 using var httpClient = new System.Net.Http.HttpClient();
                 var loaderMetaJson = await httpClient.GetStringAsync("https://meta.fabricmc.net/v2/versions/loader");
                 using var doc = System.Text.Json.JsonDocument.Parse(loaderMetaJson);
