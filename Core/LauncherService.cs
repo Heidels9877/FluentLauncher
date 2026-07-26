@@ -76,6 +76,10 @@ namespace FluentLauncher.Core
             System.EventHandler<CmlLib.Core.ByteProgress> progressChanged = null)
         {
             ValidateOfflineMode(isOffline);
+            if (isOffline)
+            {
+                throw new Exception("Offline accounts cannot install or download instances. You must use an online account to download files.");
+            }
 
             var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
             var launcher = new MinecraftLauncher(path);
@@ -83,23 +87,45 @@ namespace FluentLauncher.Core
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;
 
-            string launchVersion = await SetupModLoaderAsync(instanceInfo, path, launcher);
+            string launchVersion = await SetupModLoaderAsync(instanceInfo, path, launcher, isOffline);
             
             // Just install, don't run
             await launcher.InstallAsync(launchVersion);
         }
 
-        private async Task<string> SetupModLoaderAsync(FluentLauncher.Models.Instance instanceInfo, MinecraftPath path, MinecraftLauncher launcher)
+        private async Task<string> SetupModLoaderAsync(FluentLauncher.Models.Instance instanceInfo, MinecraftPath path, MinecraftLauncher launcher, bool isOffline)
         {
             string launchVersion = instanceInfo.MinecraftVersion;
 
             if (instanceInfo.ModLoader == FluentLauncher.Models.ModLoaderType.Forge)
             {
+                if (isOffline)
+                {
+                    var versionsDir = new DirectoryInfo(path.Versions);
+                    if (versionsDir.Exists)
+                    {
+                        var forgeDir = versionsDir.GetDirectories($"{instanceInfo.MinecraftVersion}-forge-*").FirstOrDefault();
+                        if (forgeDir != null) return forgeDir.Name;
+                    }
+                    throw new Exception("Cannot install Forge in offline mode. Forge is not installed in the Existing Minecraft Path for this version.");
+                }
+
                 var forge = new CmlLib.Core.Installer.Forge.ForgeInstaller(launcher);
                 launchVersion = await forge.Install(instanceInfo.MinecraftVersion);
             }
             else if (instanceInfo.ModLoader == FluentLauncher.Models.ModLoaderType.Fabric)
             {
+                if (isOffline)
+                {
+                    var versionsDir = new DirectoryInfo(path.Versions);
+                    if (versionsDir.Exists)
+                    {
+                        var fabricDir = versionsDir.GetDirectories($"fabric-loader-*-{instanceInfo.MinecraftVersion}").FirstOrDefault();
+                        if (fabricDir != null) return fabricDir.Name;
+                    }
+                    throw new Exception("Cannot install Fabric in offline mode. Fabric is not installed in the Existing Minecraft Path for this version.");
+                }
+
                 using var httpClient = new System.Net.Http.HttpClient();
                 var loaderMetaJson = await httpClient.GetStringAsync("https://meta.fabricmc.net/v2/versions/loader");
                 using var doc = System.Text.Json.JsonDocument.Parse(loaderMetaJson);
@@ -131,7 +157,7 @@ namespace FluentLauncher.Core
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;
 
-            string launchVersion = await SetupModLoaderAsync(instanceInfo, path, launcher);
+            string launchVersion = await SetupModLoaderAsync(instanceInfo, path, launcher, isOffline);
 
             var launchOption = new CmlLib.Core.ProcessBuilder.MLaunchOption
             {
