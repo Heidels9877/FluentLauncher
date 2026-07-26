@@ -95,11 +95,11 @@
             <ui:CardControl Icon="{ui:SymbolIcon Link24}" Margin="0,0,0,8">
                 <ui:CardControl.Header>
                     <StackPanel>
-                        <TextBlock Text="Custom Download Source URL" FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="Download source for offline mode (e.g. https://bmclapi2.bangbang93.com)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Custom API Endpoint (Advanced)" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="Override the default network endpoint for API requests (Leave blank for official servers)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </ui:CardControl.Header>
-                <ui:TextBox Text="{Binding ViewModel.Settings.CustomDownloadSourceUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" PlaceholderText="e.g. https://..."/>
+                <ui:TextBox Text="{Binding ViewModel.Settings.CustomApiEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" PlaceholderText="e.g. https://api.example.com"/>
             </ui:CardControl>
 
             <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,8">

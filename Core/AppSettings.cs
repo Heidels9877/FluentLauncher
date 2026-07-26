@@ -19,7 +19,7 @@ namespace FluentLauncher.Core
         private string _language = "en";
 
         [ObservableProperty]
-        private string _customDownloadSourceUrl = string.Empty;
+        private string _customApiEndpoint = string.Empty;
 
         [ObservableProperty]
         private string _existingMinecraftPath = string.Empty;

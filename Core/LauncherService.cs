@@ -43,11 +43,10 @@ namespace FluentLauncher.Core
             if (isOffline)
             {
                 bool hasExistingPath = !string.IsNullOrWhiteSpace(settings.ExistingMinecraftPath) && Directory.Exists(settings.ExistingMinecraftPath);
-                bool hasCustomMirror = !string.IsNullOrWhiteSpace(settings.CustomDownloadSourceUrl);
-                
-                if (!hasExistingPath && !hasCustomMirror)
+                bool hasCustomApi = !string.IsNullOrWhiteSpace(settings.CustomApiEndpoint);
+                if (!hasExistingPath && !hasCustomApi)
                 {
-                    throw new Exception("For copyright safety in offline mode, you must provide your own game files (Existing Minecraft Path) or explicitly specify a Custom Download Mirror URL in Settings.");
+                    throw new Exception("Offline accounts cannot download files from official servers. Please provide an Existing Minecraft Path in Settings.");
                 }
             }
         }
@@ -91,7 +90,7 @@ namespace FluentLauncher.Core
         private MinecraftLauncher CreateLauncher(MinecraftPath path)
         {
             var settings = AppSettings.Load();
-            string mirror = settings.CustomDownloadSourceUrl?.TrimEnd('/');
+            string mirror = settings.CustomApiEndpoint?.TrimEnd('/');
 
             if (!string.IsNullOrWhiteSpace(mirror))
             {
