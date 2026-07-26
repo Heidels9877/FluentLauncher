@@ -43,63 +43,11 @@ namespace FluentLauncher.Core
             if (isOffline)
             {
                 bool hasExistingPath = !string.IsNullOrWhiteSpace(settings.ExistingMinecraftPath) && Directory.Exists(settings.ExistingMinecraftPath);
-                bool hasCustomApi = !string.IsNullOrWhiteSpace(settings.CustomApiEndpoint);
-                if (!hasExistingPath && !hasCustomApi)
+                if (!hasExistingPath)
                 {
                     throw new Exception("Offline accounts cannot download files from official servers. Please provide an Existing Minecraft Path in Settings.");
                 }
             }
-        }
-
-        private class MirrorHandler : System.Net.Http.DelegatingHandler
-        {
-            private readonly string _mirrorUrl;
-
-            public MirrorHandler(string mirrorUrl, System.Net.Http.HttpMessageHandler innerHandler) : base(innerHandler)
-            {
-                _mirrorUrl = mirrorUrl.TrimEnd('/');
-            }
-
-            protected override async System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
-            {
-                if (request.RequestUri != null)
-                {
-                    string host = request.RequestUri.Host;
-                    if (host.Contains("mojang.com") || host.Contains("minecraft.net"))
-                    {
-                        string path = request.RequestUri.PathAndQuery;
-                        
-                        if (host.Contains("libraries"))
-                        {
-                            if (!path.StartsWith("/maven"))
-                                path = "/maven" + path;
-                        }
-                        else if (host.Contains("resources"))
-                        {
-                            if (!path.StartsWith("/assets"))
-                                path = "/assets" + path;
-                        }
-
-                        request.RequestUri = new Uri(_mirrorUrl + path);
-                    }
-                }
-                return await base.SendAsync(request, cancellationToken);
-            }
-        }
-
-        private MinecraftLauncher CreateLauncher(MinecraftPath path)
-        {
-            var settings = AppSettings.Load();
-            string mirror = settings.CustomApiEndpoint?.TrimEnd('/');
-
-            if (!string.IsNullOrWhiteSpace(mirror))
-            {
-                var parameters = CmlLib.Core.MinecraftLauncherParameters.CreateDefault(path);
-                parameters.HttpClient = new System.Net.Http.HttpClient(new MirrorHandler(mirror, new System.Net.Http.HttpClientHandler()));
-                return new MinecraftLauncher(parameters);
-            }
-            
-            return new MinecraftLauncher(path);
         }
 
         public async Task<List<string>> GetReleaseVersionsAsync()
@@ -130,7 +78,7 @@ namespace FluentLauncher.Core
             ValidateOfflineMode(isOffline);
 
             var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
-            var launcher = CreateLauncher(path);
+            var launcher = new MinecraftLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;
@@ -178,7 +126,7 @@ namespace FluentLauncher.Core
             ValidateOfflineMode(isOffline);
 
             var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
-            var launcher = CreateLauncher(path);
+            var launcher = new MinecraftLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;

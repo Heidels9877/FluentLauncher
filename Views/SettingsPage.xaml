@@ -90,23 +90,13 @@
                 </ComboBox>
             </ui:CardControl>
 
-            <TextBlock Text="Offline Mode &amp; Downloads" FontWeight="SemiBold" Margin="0,16,0,8" />
-            
-            <ui:CardControl Icon="{ui:SymbolIcon Link24}" Margin="0,0,0,8">
-                <ui:CardControl.Header>
-                    <StackPanel>
-                        <TextBlock Text="Custom API Endpoint (Advanced)" FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="Override the default network endpoint for API requests (Leave blank for official servers)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
-                    </StackPanel>
-                </ui:CardControl.Header>
-                <ui:TextBox Text="{Binding ViewModel.Settings.CustomApiEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="250" PlaceholderText="e.g. https://api.example.com"/>
-            </ui:CardControl>
+            <TextBlock Text="Offline Mode" FontWeight="SemiBold" Margin="0,16,0,8" />
 
             <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,8">
                 <ui:CardControl.Header>
                     <StackPanel>
                         <TextBlock Text="Existing Minecraft Path" FontSize="16" FontWeight="SemiBold"/>
-                        <TextBlock Text="Required if no download source is set. Use existing files (e.g. .minecraft)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Required for offline mode. Use existing files (e.g. .minecraft)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </ui:CardControl.Header>
                 <Grid>
@@ -114,7 +104,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ui:TextBox Text="{Binding ViewModel.Settings.ExistingMinecraftPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" PlaceholderText="Leave empty if using download URL"/>
+                    <ui:TextBox Text="{Binding ViewModel.Settings.ExistingMinecraftPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" PlaceholderText="Path to game files"/>
                     <ui:Button Grid.Column="1" Content="Browse..." Command="{Binding ViewModel.BrowseExistingMinecraftPathCommand}" Margin="8,0,0,0"/>
                 </Grid>
             </ui:CardControl>
