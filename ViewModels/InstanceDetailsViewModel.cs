@@ -342,7 +342,7 @@ namespace FluentLauncher.ViewModels
                 WorkStatus = "Downloading game files...";
                 WorkProgress = 0;
 
-                await _launcherService.InstallOnlyAsync(CurrentInstance, _accountManager.CurrentSession,
+                await _launcherService.InstallOnlyAsync(CurrentInstance, _accountManager.CurrentAccount.Type == FluentLauncher.Models.AccountType.Offline,
                     (s, e) => {
                         Application.Current.Dispatcher.Invoke(() => {
                             WorkStatus = $"[{e.EventType}] {e.Name}";
@@ -383,7 +383,7 @@ namespace FluentLauncher.ViewModels
                 return;
             }
             
-            _ = _launcherService.StartGameProcessAsync(CurrentInstance, _accountManager.CurrentSession);
+            _ = _launcherService.StartGameProcessAsync(CurrentInstance, _accountManager.CurrentSession, _accountManager.CurrentAccount.Type == FluentLauncher.Models.AccountType.Offline);
             
             var settings = Core.AppSettings.Load();
             if (settings.OpenLogsOnLaunch)

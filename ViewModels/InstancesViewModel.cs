@@ -162,7 +162,7 @@ namespace FluentLauncher.ViewModels
                 return;
             }
 
-            _ = _launcherService.StartGameProcessAsync(instance, _accountManager.CurrentSession);
+            _ = _launcherService.StartGameProcessAsync(instance, _accountManager.CurrentSession, _accountManager.CurrentAccount.Type == FluentLauncher.Models.AccountType.Offline);
             
             var settings = Core.AppSettings.Load();
             if (settings.OpenLogsOnLaunch)

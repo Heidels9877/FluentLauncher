@@ -19,6 +19,9 @@ namespace FluentLauncher.Core
         private string _language = "en";
 
         [ObservableProperty]
+        private string _customDownloadSourceUrl = string.Empty;
+
+        [ObservableProperty]
         private string _existingMinecraftPath = string.Empty;
 
         public static AppSettings Load()

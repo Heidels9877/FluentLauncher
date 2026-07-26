@@ -36,20 +36,71 @@ namespace FluentLauncher.Core
             return path;
         }
 
-        private void ValidateOfflineMode(CmlLib.Core.Auth.MSession session)
+        private void ValidateOfflineMode(bool isOffline)
         {
             var settings = AppSettings.Load();
-            bool isOffline = string.IsNullOrEmpty(session?.AccessToken) || session.AccessToken == "0" || session.AccessToken.ToLower() == "empty" || session.AccessToken == "offline";
             
             if (isOffline)
             {
                 bool hasExistingPath = !string.IsNullOrWhiteSpace(settings.ExistingMinecraftPath) && Directory.Exists(settings.ExistingMinecraftPath);
+                bool hasCustomMirror = !string.IsNullOrWhiteSpace(settings.CustomDownloadSourceUrl);
                 
-                if (!hasExistingPath)
+                if (!hasExistingPath && !hasCustomMirror)
                 {
-                    throw new Exception("For copyright safety in offline mode, you must provide your own game files by specifying an 'Existing Minecraft Path' (e.g. .minecraft) in the Settings.");
+                    throw new Exception("For copyright safety in offline mode, you must provide your own game files (Existing Minecraft Path) or explicitly specify a Custom Download Mirror URL in Settings.");
                 }
             }
+        }
+
+        private class MirrorHandler : System.Net.Http.DelegatingHandler
+        {
+            private readonly string _mirrorUrl;
+
+            public MirrorHandler(string mirrorUrl, System.Net.Http.HttpMessageHandler innerHandler) : base(innerHandler)
+            {
+                _mirrorUrl = mirrorUrl.TrimEnd('/');
+            }
+
+            protected override async System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+            {
+                if (request.RequestUri != null)
+                {
+                    string host = request.RequestUri.Host;
+                    if (host.Contains("mojang.com") || host.Contains("minecraft.net"))
+                    {
+                        string path = request.RequestUri.PathAndQuery;
+                        
+                        if (host.Contains("libraries"))
+                        {
+                            if (!path.StartsWith("/maven"))
+                                path = "/maven" + path;
+                        }
+                        else if (host.Contains("resources"))
+                        {
+                            if (!path.StartsWith("/assets"))
+                                path = "/assets" + path;
+                        }
+
+                        request.RequestUri = new Uri(_mirrorUrl + path);
+                    }
+                }
+                return await base.SendAsync(request, cancellationToken);
+            }
+        }
+
+        private MinecraftLauncher CreateLauncher(MinecraftPath path)
+        {
+            var settings = AppSettings.Load();
+            string mirror = settings.CustomDownloadSourceUrl?.TrimEnd('/');
+
+            if (!string.IsNullOrWhiteSpace(mirror))
+            {
+                var parameters = CmlLib.Core.MinecraftLauncherParameters.CreateDefault(path);
+                parameters.HttpClient = new System.Net.Http.HttpClient(new MirrorHandler(mirror, new System.Net.Http.HttpClientHandler()));
+                return new MinecraftLauncher(parameters);
+            }
+            
+            return new MinecraftLauncher(path);
         }
 
         public async Task<List<string>> GetReleaseVersionsAsync()
@@ -73,14 +124,14 @@ namespace FluentLauncher.Core
             return releases;
         }
 
-        public async Task InstallOnlyAsync(FluentLauncher.Models.Instance instanceInfo, CmlLib.Core.Auth.MSession session,
+        public async Task InstallOnlyAsync(FluentLauncher.Models.Instance instanceInfo, bool isOffline,
             System.EventHandler<CmlLib.Core.Installers.InstallerProgressChangedEventArgs> fileChanged = null,
             System.EventHandler<CmlLib.Core.ByteProgress> progressChanged = null)
         {
-            ValidateOfflineMode(session);
+            ValidateOfflineMode(isOffline);
 
             var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
-            var launcher = new MinecraftLauncher(path);
+            var launcher = CreateLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;
@@ -121,14 +172,14 @@ namespace FluentLauncher.Core
             return launchVersion;
         }
 
-        public async Task<System.Diagnostics.Process> LaunchAsync(FluentLauncher.Models.Instance instanceInfo, CmlLib.Core.Auth.MSession session,
+        public async Task<System.Diagnostics.Process> LaunchAsync(FluentLauncher.Models.Instance instanceInfo, CmlLib.Core.Auth.MSession session, bool isOffline,
             System.EventHandler<CmlLib.Core.Installers.InstallerProgressChangedEventArgs> fileChanged = null,
             System.EventHandler<CmlLib.Core.ByteProgress> progressChanged = null)
         {
-            ValidateOfflineMode(session);
+            ValidateOfflineMode(isOffline);
 
             var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
-            var launcher = new MinecraftLauncher(path);
+            var launcher = CreateLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
             if (progressChanged != null) launcher.ByteProgressChanged += progressChanged;
@@ -156,7 +207,7 @@ namespace FluentLauncher.Core
             return process;
         }
 
-        public async Task StartGameProcessAsync(FluentLauncher.Models.Instance instance, CmlLib.Core.Auth.MSession session)
+        public async Task StartGameProcessAsync(FluentLauncher.Models.Instance instance, CmlLib.Core.Auth.MSession session, bool isOffline)
         {
             if (instance.IsRunning) return;
 
@@ -167,7 +218,7 @@ namespace FluentLauncher.Core
 
             try
             {
-                var process = await LaunchAsync(instance, session,
+                var process = await LaunchAsync(instance, session, isOffline,
                     (s, e) => {
                         System.Windows.Application.Current.Dispatcher.InvokeAsync(() => {
                             instance.LaunchStatus = $"[{e.EventType}] {e.Name}";
