@@ -331,13 +331,18 @@ namespace FluentLauncher.ViewModels
         public async Task InstallGameFilesAsync()
         {
             if (CurrentInstance == null || IsWorking) return;
+            if (_accountManager.CurrentAccount == null)
+            {
+                MessageBox.Show("Please select an account in Settings/Accounts first.");
+                return;
+            }
             try
             {
                 IsWorking = true;
                 WorkStatus = "Downloading game files...";
                 WorkProgress = 0;
 
-                await _launcherService.InstallOnlyAsync(CurrentInstance,
+                await _launcherService.InstallOnlyAsync(CurrentInstance, _accountManager.CurrentSession,
                     (s, e) => {
                         Application.Current.Dispatcher.Invoke(() => {
                             WorkStatus = $"[{e.EventType}] {e.Name}";

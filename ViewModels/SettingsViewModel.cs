@@ -22,6 +22,16 @@ namespace FluentLauncher.ViewModels
         [ObservableProperty]
         private int _selectedLanguageIndex = 0;
 
+        [RelayCommand]
+        public void BrowseExistingMinecraftPath()
+        {
+            var dialog = new Microsoft.Win32.OpenFolderDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                Settings.ExistingMinecraftPath = dialog.FolderName;
+            }
+        }
+
         partial void OnSelectedThemeIndexChanged(int value)
         {
             if (value == 0)

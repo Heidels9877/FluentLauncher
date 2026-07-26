@@ -19,6 +19,39 @@ namespace FluentLauncher.Core
             Launcher = new MinecraftLauncher(MinecraftPath);
         }
 
+        private MinecraftPath GetConfiguredMinecraftPath(string instancePath)
+        {
+            var path = new MinecraftPath(instancePath);
+            var settings = AppSettings.Load();
+            
+            if (!string.IsNullOrWhiteSpace(settings.ExistingMinecraftPath) && Directory.Exists(settings.ExistingMinecraftPath))
+            {
+                var globalPath = new MinecraftPath(settings.ExistingMinecraftPath);
+                path.Library = globalPath.Library;
+                path.Assets = globalPath.Assets;
+                path.Versions = globalPath.Versions;
+                path.Runtime = globalPath.Runtime;
+            }
+            
+            return path;
+        }
+
+        private void ValidateOfflineMode(CmlLib.Core.Auth.MSession session)
+        {
+            var settings = AppSettings.Load();
+            bool isOffline = string.IsNullOrEmpty(session?.AccessToken) || session.AccessToken == "0" || session.AccessToken.ToLower() == "empty" || session.AccessToken == "offline";
+            
+            if (isOffline)
+            {
+                bool hasExistingPath = !string.IsNullOrWhiteSpace(settings.ExistingMinecraftPath) && Directory.Exists(settings.ExistingMinecraftPath);
+                
+                if (!hasExistingPath)
+                {
+                    throw new Exception("For copyright safety in offline mode, you must provide your own game files by specifying an 'Existing Minecraft Path' (e.g. .minecraft) in the Settings.");
+                }
+            }
+        }
+
         public async Task<List<string>> GetReleaseVersionsAsync()
         {
             var versionsObj = await Launcher.GetAllVersionsAsync();
@@ -40,11 +73,13 @@ namespace FluentLauncher.Core
             return releases;
         }
 
-        public async Task InstallOnlyAsync(FluentLauncher.Models.Instance instanceInfo,
+        public async Task InstallOnlyAsync(FluentLauncher.Models.Instance instanceInfo, CmlLib.Core.Auth.MSession session,
             System.EventHandler<CmlLib.Core.Installers.InstallerProgressChangedEventArgs> fileChanged = null,
             System.EventHandler<CmlLib.Core.ByteProgress> progressChanged = null)
         {
-            var path = new MinecraftPath(instanceInfo.InstancePath);
+            ValidateOfflineMode(session);
+
+            var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
             var launcher = new MinecraftLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
@@ -90,7 +125,9 @@ namespace FluentLauncher.Core
             System.EventHandler<CmlLib.Core.Installers.InstallerProgressChangedEventArgs> fileChanged = null,
             System.EventHandler<CmlLib.Core.ByteProgress> progressChanged = null)
         {
-            var path = new MinecraftPath(instanceInfo.InstancePath);
+            ValidateOfflineMode(session);
+
+            var path = GetConfiguredMinecraftPath(instanceInfo.InstancePath);
             var launcher = new MinecraftLauncher(path);
 
             if (fileChanged != null) launcher.FileProgressChanged += fileChanged;
@@ -172,6 +209,13 @@ namespace FluentLauncher.Core
                 instance.IsRunning = false;
                 instance.LaunchStatus = $"Error: {ex.Message}";
                 instance.InstanceLogs += $"[FATAL ERROR] {ex.Message}\n";
+                
+                if (ex.Message.Contains("copyright safety"))
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                        System.Windows.MessageBox.Show(ex.Message, "Offline Mode Restriction", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                    });
+                }
             }
         }
     }

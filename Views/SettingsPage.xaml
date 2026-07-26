@@ -89,6 +89,25 @@
                     <ComboBoxItem Content="{DynamicResource Str_Ukrainian}"/>
                 </ComboBox>
             </ui:CardControl>
+
+            <TextBlock Text="Offline Mode &amp; Downloads" FontWeight="SemiBold" Margin="0,16,0,8" />
+            
+            <ui:CardControl Icon="{ui:SymbolIcon Folder24}" Margin="0,0,0,8">
+                <ui:CardControl.Header>
+                    <StackPanel>
+                        <TextBlock Text="Existing Minecraft Path" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="Required for offline mode. Use existing game files instead of downloading (e.g. .minecraft)" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </ui:CardControl.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ui:TextBox Text="{Binding ViewModel.Settings.ExistingMinecraftPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="200" PlaceholderText="Leave empty for official launcher"/>
+                    <ui:Button Grid.Column="1" Content="Browse..." Command="{Binding ViewModel.BrowseExistingMinecraftPathCommand}" Margin="8,0,0,0"/>
+                </Grid>
+            </ui:CardControl>
         </StackPanel>
         </ScrollViewer>
     </Grid>
